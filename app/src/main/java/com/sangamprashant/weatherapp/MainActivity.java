@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import android.Manifest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout homeRL;
     private ProgressBar loadingPB;
-    private TextView cityNameTv,temperatureTV,conditionTV;
+    private TextView cityNameTv,temperatureTV,conditionTV,windTV,cloudTV,humidityTV;
     private RecyclerView weatherRV;
     private TextInputEditText CityEdit;
     private ImageView backIV,iconIV,searchIv;
     private ArrayList<WeatherRVModel> weatherRVModelArrayList;
-    private WeatherRVAdapter weatherRVAdapter;
+
     private LocationManager locationManager;
     private int PERMISSION_CODE = 1;
     private String cityName;
@@ -71,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
         backIV = findViewById(R.id.IdIVBack);
         iconIV = findViewById(R.id.idIVIcon);
         searchIv = findViewById(R.id.idTVSearch);
+        windTV =findViewById(R.id.idTVWindTextMetric);
+        cloudTV=findViewById(R.id.idTVCloudTextMetric);
+        humidityTV=findViewById(R.id.idTVCHumidTextMetric);
         weatherRVModelArrayList= new ArrayList<>();
-        weatherRVAdapter = new WeatherRVAdapter(this,weatherRVModelArrayList);
-        weatherRV.setAdapter(weatherRVAdapter);
+
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeatherInfo(String cityName) {
-        String url = "http://api.weatherapi.com/v1/current.json?key=0981880a7768427188471741231405&q=" + cityName + "&aqi=no";
+        String url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=89852f15bebd043e42effdd09d6aef37&units=metric";
         cityNameTv.setText(cityName);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
@@ -148,24 +151,37 @@ public class MainActivity extends AppCompatActivity {
                 homeRL.setVisibility(View.VISIBLE);
                 weatherRVModelArrayList.clear();
                 try {
-                    String temperature = response.getJSONObject("current").getString("temp_c");
-                    int isDay = response.getJSONObject("current").getInt("is_day");
-                    String condition =response.getJSONObject("current").getJSONObject("current").getString("text");
-                    String conditionIcon =response.getJSONObject("current").getJSONObject("current").getString("icon");
-                    Picasso.get().load("http:".concat(conditionIcon)).into(iconIV);
-                    if(isDay==1){
-                        //morning
-                        Picasso.get().load("https://th.bing.com/th/id/R.77a87eba662b5c797bb2f9131d9cace0?rik=R2Ad60XOqCzg%2fw&riu=http%3a%2f%2fiphone-wallpaper.pics%2fwallpaper%2fs%2fu%2fsunny-sky-nature-mobile-wallpaper-1080x1920-11940-1025044930_400c27349d64b368d49797b970113459_raw.jpg&ehk=pS20Zm9Vcz3K1dvJrvqzb%2f8x5%2bpb2Rx%2boTd2AJHtIPo%3d&risl=&pid=ImgRaw&r=0").into(backIV);
-                    }
-                    else{
-                        Picasso.get().load("https://th.bing.com/th/id/OIP.rBku-YsDIBOiVWWNZSDVlwHaLF?pid=ImgDet&rs=1").into(backIV);
-                    }
-                    conditionTV.setText(condition);
-                    temperatureTV.setText(temperature+"°c");
+                    JSONObject mainObject = response.getJSONObject("main");
+                    String temperature = mainObject.getString("temp");
+                    temperatureTV.setText(temperature + "°C");
 
-                    weatherRVAdapter.notifyDataSetChanged();
+                    JSONArray weatherArray = response.getJSONArray("weather");
+                    if (weatherArray.length() > 0) {
+                        JSONObject weatherObject = weatherArray.getJSONObject(0);
+                        String condition = weatherObject.getString("main");
+                        String description = weatherObject.getString("description");
+                        conditionTV.setText(condition + " (" + description + ")");
+                        JSONObject windObject = response.getJSONObject("wind");
+                        double windSpeed = windObject.getDouble("speed");
+                        String windInfo = windSpeed + " m/s";
+                        windTV.setText(windInfo);
+                        JSONObject cloudObject = response.getJSONObject("clouds");
+                        int cloudPercentage = cloudObject.getInt("all");
+                        // Update the cloud information in your UI
+                        String cloudInfo = cloudPercentage + "%";
+                        cloudTV.setText(cloudInfo);
+                        double humidity = mainObject.getDouble("humidity");
+                        // Update the humidity information in your UI
+                        String humidityInfo =  humidity + "%";
+                        humidityTV.setText(humidityInfo);
 
-                }catch (JSONException e){
+
+
+                        String iconCode = weatherObject.getString("icon");
+                        String iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
+                        Picasso.get().load(iconUrl).into(iconIV);
+                    }
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -177,5 +193,6 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(jsonObjectRequest);
     }
+
 
 }
