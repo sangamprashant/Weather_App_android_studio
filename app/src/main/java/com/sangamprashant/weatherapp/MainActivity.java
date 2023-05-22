@@ -37,7 +37,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView weatherRV;
     private TextInputEditText CityEdit;
     private ImageView backIV,iconIV,searchIv;
-    private ArrayList<WeatherRVModel> weatherRVModelArrayList;
+
 
     private LocationManager locationManager;
     private int PERMISSION_CODE = 1;
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         setContentView(R.layout.activity_main);
-        homeRL = findViewById(R.id.idRLHome);
         loadingPB = findViewById(R.id.Loading_id);
         cityNameTv = findViewById(R.id.idTVCityName);
         temperatureTV = findViewById(R.id.idTVTemperature);
@@ -75,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
         windTV =findViewById(R.id.idTVWindTextMetric);
         cloudTV=findViewById(R.id.idTVCloudTextMetric);
         humidityTV=findViewById(R.id.idTVCHumidTextMetric);
-        weatherRVModelArrayList= new ArrayList<>();
+
+        homeRL = findViewById(R.id.idRLHome);
+
 
 
 
@@ -87,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         cityName = getCityName(location.getLongitude(),location.getLatitude());
         getWeatherInfo(cityName);
+
+        setTimeBasedBackground();
 
         searchIv.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -101,10 +107,37 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
 
+    private void setTimeBasedBackground() {
+        Calendar calendar = Calendar.getInstance();
+        Date currentTime = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH", Locale.getDefault());
+        String currentHourString = sdf.format(currentTime);
+        int currentHour = Integer.parseInt(currentHourString);
+
+        int dayImage = R.drawable.day;
+        int nightImage = R.drawable.night;
+        int backgroundResource;
+
+        if (currentHour >= 18 || currentHour < 6) {
+            // Night time (6 PM to 6 AM)
+            backgroundResource = nightImage;
+        } else {
+            // Day time (6 AM to 6 PM)
+            backgroundResource = dayImage;
+        }
+
+        backIV.setImageResource(backgroundResource);
+        backIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+    }
+
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode==PERMISSION_CODE){
             if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
@@ -149,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 loadingPB.setVisibility(View.GONE);
                 homeRL.setVisibility(View.VISIBLE);
-                weatherRVModelArrayList.clear();
+
                 try {
                     JSONObject mainObject = response.getJSONObject("main");
                     String temperature = mainObject.getString("temp");

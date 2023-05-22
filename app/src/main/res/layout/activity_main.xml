@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@color/black_shade_1" />
+            android:src="@drawable/day" />
+
         <TextView
             android:id="@+id/idTVCityName"
             android:layout_width="match_parent"
@@ -35,7 +36,8 @@
             android:text="City Name"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="30dp" />
+
         <LinearLayout
             android:id="@+id/idLLEdt"
             android:layout_width="match_parent"
@@ -49,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="4.5"
-                app:boxBackgroundColor="@color/transparent_black"
+                app:boxBackgroundColor="#39000000"
                 app:boxStrokeColor="@color/white"
                 app:hintTextColor="@color/white">
                 <com.google.android.material.textfield.TextInputEditText
@@ -113,8 +115,8 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-
-            android:src="@mipmap/ic_launcher" />
+android:src="@mipmap/ic_launcher"
+           />
 
         <TextView
             android:id="@+id/idTVCondition"
@@ -310,7 +312,7 @@
         <TextView
             android:layout_width="403dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="18dp"
 
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -319,7 +321,8 @@
             android:text="Current Weather condition"
             android:textColor="@color/white"
             android:layout_below="@id/idTVCondition"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginLeft="18dp" />
 
 
     </RelativeLayout>
