@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView cityNameTv,temperatureTV,conditionTV,windTV,cloudTV,humidityTV;
     private RecyclerView weatherRV;
     private TextInputEditText CityEdit;
-    private ImageView backIV,iconIV,searchIv;
+    private ImageView backIV,iconIV,searchIv,countryFlag;
 
 
     private LocationManager locationManager;
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         windTV =findViewById(R.id.idTVWindTextMetric);
         cloudTV=findViewById(R.id.idTVCloudTextMetric);
         humidityTV=findViewById(R.id.idTVCHumidTextMetric);
+        countryFlag=findViewById(R.id.idIVFlag);
 
         homeRL = findViewById(R.id.idRLHome);
 
@@ -94,15 +95,14 @@ public class MainActivity extends AppCompatActivity {
 
         setTimeBasedBackground();
 
-        searchIv.setOnClickListener(new View.OnClickListener(){
+        searchIv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                String city = CityEdit.getText().toString();
-                if(city.isEmpty()){
-                    Toast.makeText(MainActivity.this,"Please enter city name", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    cityNameTv.setText(cityName) ;
+            public void onClick(View v) {
+                String city = CityEdit.getText().toString().trim(); // Trim the input to remove extra spaces
+                if (city.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please enter city name", Toast.LENGTH_SHORT).show();
+                } else {
+                    cityNameTv.setText(city);
                     getWeatherInfo(city);
                 }
             }
@@ -207,12 +207,88 @@ public class MainActivity extends AppCompatActivity {
                         // Update the humidity information in your UI
                         String humidityInfo =  humidity + "%";
                         humidityTV.setText(humidityInfo);
+                        String cityName = response.getString("name");
+                        cityNameTv.setText(cityName);
 
 
+                        JSONObject sysObject = response.getJSONObject("sys");
+                        String countryCode = sysObject.getString("country");
+                        String countryUrl = "https://flagcdn.com/144x108/" + countryCode.toLowerCase() + ".png";
+                        Picasso.get().load(countryUrl).into(countryFlag);
 
                         String iconCode = weatherObject.getString("icon");
                         String iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
                         Picasso.get().load(iconUrl).into(iconIV);
+                        int dayImage = R.drawable.day;
+                        int sunny = R.drawable.sunny;
+                        int nightClear = R.drawable.nigth2;
+                        int hazeDay = R.drawable.haze;
+                        int hazeNight = R.drawable.hazenight;
+                        int cloudsDay = R.drawable.clouds;
+                        int cloudsNight = R.drawable.cloudsnight;
+                        int dayRain = R.drawable.rainday;
+                        int nightRain = R.drawable.rainnight;
+                        int dayThunder = R.drawable.thunderday;
+                        int nightThunder = R.drawable.thundernight;
+                        int ClearRainDay = R.drawable.rainclearday;
+                        int ClearRainNight = R.drawable.rainclearnight;
+                        int backgroundResource;
+
+                        //day and sunny
+                        if (iconCode.equals("01d")) {
+                            backgroundResource = sunny;
+                        }
+                        //night and clear
+                        else if (iconCode.equals("01n")) {
+                            backgroundResource = nightClear;
+                        }
+                        //haze day
+                        else if (iconCode.equals("50d")) {
+                            backgroundResource = hazeDay;
+                        }
+                        //haze night
+                        else if (iconCode.equals("50n")) {
+                            backgroundResource = hazeNight;
+                        }
+                        // day rain
+                        else if (iconCode.equals("13d")) {
+                            backgroundResource = dayRain;
+                        }
+                        // night rain
+                        else if (iconCode.equals("13n")) {
+                            backgroundResource = nightRain;
+                        }
+                        //thunder day
+                        else if (iconCode.equals("13d")) {
+                            backgroundResource = dayThunder;
+                        }
+                        //thunder night
+                        else if (iconCode.equals("13n")) {
+                            backgroundResource = nightThunder;
+                        }
+                        //clear rain day
+                        else if (iconCode.equals("10d")) {
+                            backgroundResource = ClearRainDay;
+                        }
+                        //clear rain night
+                        else if (iconCode.equals("10n")) {
+                            backgroundResource = ClearRainNight;
+                        }
+                        //cloud day
+                        else if (iconCode.equals("04d")) {
+                            backgroundResource = cloudsDay;
+                        }//cloud night
+                        else if (iconCode.equals("04n")) {
+                            backgroundResource = cloudsNight;
+                        }
+
+                        else {
+                            backgroundResource = dayImage;
+                        }
+
+                        backIV.setImageResource(backgroundResource);
+                        backIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

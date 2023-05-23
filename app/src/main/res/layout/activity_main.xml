@@ -26,23 +26,38 @@
             android:scaleType="centerCrop"
             android:src="@drawable/day" />
 
-        <TextView
-            android:id="@+id/idTVCityName"
+        <LinearLayout
+            android:id="@+id/idCityNameAndFlag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="107dp"
             android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:padding="28dp"
-            android:text="City Name"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="30dp" />
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/idTVCityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check Your Internet"
+                android:padding="28dp"
+                android:gravity="end"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/white"
+                android:textSize="30dp" />
+
+
+            <ImageView
+                android:id="@+id/idIVFlag"
+                android:layout_width="101dp"
+                android:layout_height="wrap_content"
+
+                android:src="@mipmap/ic_launcher" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/idLLEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/idTVCityName"
+            android:layout_below="@+id/idCityNameAndFlag"
             android:orientation="horizontal"
             android:weightSum="5">
             <com.google.android.material.textfield.TextInputLayout
@@ -99,7 +114,7 @@
             android:layout_marginBottom="10dp"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="23"
+            android:text="N/A"
             android:textColor="@color/white"
             android:textSize="70dp" />
 
@@ -190,7 +205,7 @@ android:src="@mipmap/ic_launcher"
 
                     android:layout_below="@id/idTVWindText"
                     android:gravity="center_horizontal"
-                    android:text="23 m/s"
+                    android:text="N/A"
                     android:textSize="20dp"
                     android:textAlignment="center"
                     android:textColor="@color/white" />
@@ -243,7 +258,7 @@ android:src="@mipmap/ic_launcher"
 
                     android:layout_below="@id/idTVCloudText"
                     android:gravity="center_horizontal"
-                    android:text="23%"
+                    android:text="N/A"
                     android:textAlignment="center"
                     android:textSize="20dp"
                     android:textColor="@color/white" />
@@ -293,7 +308,7 @@ android:src="@mipmap/ic_launcher"
 
                     android:layout_below="@id/idTVHumidText"
                     android:gravity="center_horizontal"
-                    android:text="23%"
+                    android:text="N/A"
                     android:textAlignment="center"
                     android:textSize="20dp"
                     android:textColor="@color/white" />
