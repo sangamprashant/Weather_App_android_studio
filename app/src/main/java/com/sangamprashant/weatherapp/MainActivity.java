@@ -221,6 +221,10 @@ public class MainActivity extends AppCompatActivity {
                         Picasso.get().load(iconUrl).into(iconIV);
                         int dayImage = R.drawable.day;
                         int sunny = R.drawable.sunny;
+                        int fewCloudsDay = R.drawable.fewclouds;
+                        int fewCloudsNight = R.drawable.fewcloudsnight;
+                        int scatteredCloudDay = R.drawable.scatteredcloudday;
+                        int scatteredCloudNight = R.drawable.scatteredcloudnight;
                         int nightClear = R.drawable.nigth2;
                         int hazeDay = R.drawable.haze;
                         int hazeNight = R.drawable.hazenight;
@@ -232,7 +236,14 @@ public class MainActivity extends AppCompatActivity {
                         int nightThunder = R.drawable.thundernight;
                         int ClearRainDay = R.drawable.rainclearday;
                         int ClearRainNight = R.drawable.rainclearnight;
+                        int nightImage = R.drawable.night;
                         int backgroundResource;
+                        Calendar calendar = Calendar.getInstance();
+                        Date currentTime = calendar.getTime();
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH", Locale.getDefault());
+                        String currentHourString = sdf.format(currentTime);
+                        int currentHour = Integer.parseInt(currentHourString);
+
 
                         //day and sunny
                         if (iconCode.equals("01d")) {
@@ -241,6 +252,29 @@ public class MainActivity extends AppCompatActivity {
                         //night and clear
                         else if (iconCode.equals("01n")) {
                             backgroundResource = nightClear;
+                        }
+                        //day and few clouds
+                        else if (iconCode.equals("02d")) {
+                            backgroundResource = fewCloudsDay;
+                        }
+                        //night and few clouds
+                        else if (iconCode.equals("02n")) {
+                            backgroundResource = fewCloudsNight;
+                        }
+                        //day and scattered clouds
+                        else if (iconCode.equals("03d")) {
+                            backgroundResource = scatteredCloudDay;
+                        }
+                        //night and scattered clouds
+                        else if (iconCode.equals("03n")) {
+                            backgroundResource = scatteredCloudNight;
+                        }
+                        //cloud day
+                        else if (iconCode.equals("04d")) {
+                            backgroundResource = cloudsDay;
+                        }//cloud night
+                        else if (iconCode.equals("04n")) {
+                            backgroundResource = cloudsNight;
                         }
                         //haze day
                         else if (iconCode.equals("50d")) {
@@ -274,16 +308,16 @@ public class MainActivity extends AppCompatActivity {
                         else if (iconCode.equals("10n")) {
                             backgroundResource = ClearRainNight;
                         }
-                        //cloud day
-                        else if (iconCode.equals("04d")) {
-                            backgroundResource = cloudsDay;
-                        }//cloud night
-                        else if (iconCode.equals("04n")) {
-                            backgroundResource = cloudsNight;
-                        }
+
 
                         else {
-                            backgroundResource = dayImage;
+                            if (currentHour >= 18 || currentHour < 6) {
+                                // Night time (6 PM to 6 AM)
+                                backgroundResource = nightImage;
+                            } else {
+                                // Day time (6 AM to 6 PM)
+                                backgroundResource = dayImage;
+                            }
                         }
 
                         backIV.setImageResource(backgroundResource);
