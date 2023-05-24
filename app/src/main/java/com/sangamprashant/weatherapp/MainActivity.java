@@ -49,11 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout homeRL;
     private ProgressBar loadingPB;
     private TextView cityNameTv,temperatureTV,conditionTV,windTV,cloudTV,humidityTV;
-    private RecyclerView weatherRV;
     private TextInputEditText CityEdit;
     private ImageView backIV,iconIV,searchIv,countryFlag;
-
-
     private LocationManager locationManager;
     private int PERMISSION_CODE = 1;
     private String cityName;
@@ -69,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         cityNameTv = findViewById(R.id.idTVCityName);
         temperatureTV = findViewById(R.id.idTVTemperature);
         conditionTV = findViewById(R.id.idTVCondition);
-        weatherRV = findViewById(R.id.idRVWeather);
         CityEdit = findViewById(R.id.idETCity);
         backIV = findViewById(R.id.IdIVBack);
         iconIV = findViewById(R.id.idIVIcon);
